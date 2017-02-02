@@ -12,14 +12,17 @@ Copy default.settings.lua to settings.lua and adjust variables inside.
 
 ## Usage
 
-// Add new device by sending programming command.
-http://<ip>/?name=window1&command=PROGRAM&remote_address=123456&rolling_code=1&repeat_count=2
+Add new device by sending programming command.
 
-// Add another device
-http://<ip>/?name=window2&command=PROGRAM&remote_address=654321&rolling_code=1&repeat_count=2
+    http://<ip>/?name=window1&command=PROGRAM&remote_address=123456&rolling_code=1&repeat_count=2
 
-// Send command to existing device.
-http://<ip>/?name=window1&command=UP
-http://<ip>/?name=window1&command=DOWN
-http://<ip>/?name=window1&command=STOP
-http://<ip>/?name=window1&command=PROGRAM
+Add another device
+
+    http://<ip>/?name=window2&command=PROGRAM&remote_address=654321&rolling_code=1&repeat_count=2
+
+Send command to existing device.
+
+    http://<ip>/?name=window1&command=UP
+    http://<ip>/?name=window1&command=DOWN
+    http://<ip>/?name=window1&command=STOP
+    http://<ip>/?name=window1&command=PROGRAM
