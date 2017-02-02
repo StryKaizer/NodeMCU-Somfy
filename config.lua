@@ -19,30 +19,30 @@ end
 
 function readconfig()
     local cfg, ok, ln
-    if file.exists(config_file.."cfg") then
-        print("Reading config from "..config_file.."cfg")
-        file.open(config_file.."cfg", "r+")
+    if file.exists(config_file .. "cfg") then
+        print("Reading config from " .. config_file .. "cfg")
+        file.open(config_file .. "cfg", "r+")
         ln = file.readline()
         file.close()
     else
-        if file.exists(config_file.."bak") then
-            print("Reading config from "..config_file.."bak")
-            file.open(config_file.."bak", "r+")
+        if file.exists(config_file .. "bak") then
+            print("Reading config from " .. config_file .. "bak")
+            file.open(config_file .. "bak", "r+")
             ln = file.readline()
             file.close()
         end
     end
     if not ln then ln = "{}" end
-    print("Configuration: "..ln)
+    print("Configuration: " .. ln)
     config = cjson.decode(ln)
     config_saved = deepcopy(config)
 end
 
 function writeconfighard()
     print("Saving config")
-    file.remove(config_file.."bak")
-    file.rename(config_file.."cfg", config_file.."bak")
-    file.open(config_file.."cfg", "w+")
+    file.remove(config_file .. "bak")
+    file.rename(config_file .. "cfg", config_file .. "bak")
+    file.open(config_file .. "cfg", "w+")
     local ok, cfg = pcall(cjson.encode, config)
     if ok then
         file.writeline(cfg)
@@ -67,7 +67,7 @@ function writeconfig()
     if count == 0 then
         config_saved = readconfig()
     end
-    for remote,cfg in pairs(config_saved) do
+    for remote, cfg in pairs(config_saved) do
         savelater = savelater or not config[remote] or config[remote].rc > cfg.rc
         savenow = savenow or not config[remote] or config[remote].rc > cfg.rc + 10
     end

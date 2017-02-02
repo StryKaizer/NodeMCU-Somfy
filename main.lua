@@ -2,19 +2,7 @@
 
 --[[
 
-USAGE
 
-// Add new device by sending programming command.
-?name=window1&command=PROGRAM&remote_address=123456&rolling_code=1&repeat_count=2
-
-// Add another device
-?name=window2&command=PROGRAM&remote_address=654321&rolling_code=1&repeat_count=2
-
-// Send command to existing device.
-?name=window1&command=UP
-?name=window1&command=DOWN
-?name=window1&command=STOP
-?name=window1&command=PROGRAM
 
 --]]
 
