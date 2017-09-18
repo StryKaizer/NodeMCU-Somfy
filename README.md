@@ -12,15 +12,19 @@ Copy default.settings.lua to settings.lua and adjust variables inside.
 
 ## Usage
 
-Add new device by sending programming command.
+Add new device by sending CONFIG command.
 
-    http://<ip>/?name=window1&command=PROGRAM&remote_address=123456&rolling_code=1&repeat_count=2
+    http://<ip>/?name=yourfirstdevice&command=CONFIG&address=123456
 
 Add another device
 
-    http://<ip>/?name=window2&command=PROGRAM&remote_address=654321&rolling_code=1&repeat_count=2
+    http://<ip>/?name=yourotherdevice&command=CONFIG&address=654321
+    
+Update config for existing device
 
-Send command to existing device.
+    http://<ip>/?name=yourfirstdevice&command=CONFIG&address=123457
+
+Send somfy commands to existing device.
 
     http://<ip>/?name=window1&command=UP
     http://<ip>/?name=window1&command=DOWN

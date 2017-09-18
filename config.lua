@@ -85,7 +85,7 @@ end
 
 
 if not config then readconfig() end
-if #config == 0 then -- somfy.cfg does not exist
+if config == 0 then -- somfy.cfg does not exist
     config = cjson.decode([[{"dummyitem1":{"rc":1,"address":123},"dummyitem2":{"rc":1,"address":124}}]])
     config_saved = deepcopy(config)
 end
