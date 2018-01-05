@@ -20,45 +20,57 @@ srv:listen(80, function(conn)
         buf = buf .. "<br><em>pin:</em><br><pre>" .. pin .. "</pre>"
         local _on, _off = "", ""
         if (_GET.name and _GET.command) then
-            if (string.upper(_GET.command) == "CONFIG") then
-                -- http://<ip>/?name=window1&command=CONFIG&address=123456
+            if (string.upper(_GET.command) == "ADD") then
+              -- http://<ip>/?name=window1&command=ADD&address=123456
+              if (_GET.address and not config[_GET.name]) then
                 config[_GET.name] = { rc = 1, address = _GET.address }
-                writeconfighard()
-                buf = buf .. "<br><em>Configuration updated...</em>"
-            elseif (string.upper(_GET.command) == "PROGRAM" and config[_GET.name].address) then
+                -- writeconfighard()
+                buf = buf .. "<br><em>Device has been ADDED:</em><br><pre>" .. _GET.name .. "</pre>"
+              else
+                buf = buf .. "<br><em>Address for device not specified or device already exists.</em>"
+              end
+            elseif not config[_GET.name] then
+              buf = buf .. "<br><em>No device found with name '" .. _GET.name .. "'. You can add new devices using the ADD command.</em>"
+            else
+              if (string.upper(_GET.command) == "PROGRAM" and config[_GET.name].address) then
                 -- http://<ip>/?name=window1&command=PROGRAM
-                buf = buf .. "<br><em>Triggered PROGRAM on device:</em><br><pre>" .. config[_GET.name] .. "</pre>"
---                somfy.sendcommand(pin, tonumber(config[_GET.name].address), somfy.PROG, tonumber(config[_GET.name].rc), 1)
+                buf = buf .. "<br><em>Triggered PROGRAM on device:</em><br><pre>" .. _GET.name .. "</pre>"
+                somfy.sendcommand(pin, tonumber(config[_GET.name].address), somfy.PROG, tonumber(config[_GET.name].rc), 1)
                 -- Increase rolling code with 1
---                config[_GET.name].rc = tonumber(config[_GET.name].rc) + 1
-            elseif (string.upper(_GET.command) == "UP" and config[_GET.name].address) then
+                config[_GET.name].rc = tonumber(config[_GET.name].rc) + 1
+              elseif (string.upper(_GET.command) == "UP" and config[_GET.name].address) then
                 -- http://<ip>/?name=window1&command=UP
                 local remote_address = config[_GET.name].address
                 local rolling_code = config[_GET.name].rc
-                buf = buf .. "<br><em>Triggered UP on device:</em><br><pre>" .. config[_GET.name] .. "</pre>"
---                somfy.sendcommand(pin, remote_address, somfy.UP, rolling_code, repeat_count)
+                buf = buf .. "<br><em>Triggered UP on device:</em><br><pre>" .. _GET.name .. "</pre>"
+                somfy.sendcommand(pin, remote_address, somfy.UP, rolling_code, repeat_count)
                 -- Increase rolling code with 1
                 config[_GET.name].rc = config[_GET.name].rc + 1
-            elseif (string.upper(_GET.command) == "DOWN" and config[_GET.name].address) then
+              elseif (string.upper(_GET.command) == "DOWN" and config[_GET.name].address) then
                 -- http://<ip>/?name=window1&command=DOWN
                 local remote_address = config[_GET.name].address
                 local rolling_code = config[_GET.name].rc
-                buf = buf .. "<br><em>Triggered DOWN on device:</em><br><pre>" .. config[_GET.name] .. "</pre>"
---                somfy.sendcommand(pin, remote_address, somfy.DOWN, rolling_code, repeat_count)
+                buf = buf .. "<br><em>Triggered DOWN on device:</em><br><pre>" .. _GET.name .. "</pre>"
+                somfy.sendcommand(pin, remote_address, somfy.DOWN, rolling_code, repeat_count)
                 -- Increase rolling code with 1
                 config[_GET.name].rc = config[_GET.name].rc + 1
-            elseif (string.upper(_GET.command) == "STOP" and config[_GET.name].address) then
+              elseif (string.upper(_GET.command) == "STOP" and config[_GET.name].address) then
                 -- http://<ip>/?name=window1&command=DOWN
                 local remote_address = config[_GET.name].address
                 local rolling_code = config[_GET.name].rc
-                buf = buf .. "<br><em>Triggered STOP on device:</em><br><pre>" .. config[_GET.name] .. "</pre>"
---                somfy.sendcommand(pin, remote_address, somfy.STOP, rolling_code, repeat_count)
+                buf = buf .. "<br><em>Triggered STOP on device:</em><br><pre>" .. _GET.name .. "</pre>"
+                somfy.sendcommand(pin, remote_address, somfy.STOP, rolling_code, repeat_count)
                 -- Increase rolling code with 1
                 config[_GET.name].rc = config[_GET.name].rc + 1
-            else
-                buf = buf .. "<br><em>Command 2 unsupported or missing configuration"
+              elseif (string.upper(_GET.command) == "REMOVE") then
+                config[_GET.name] = nil
+                buf = buf .. "<br><em>Device has been REMOVED:</em><br><pre>" .. _GET.name .. "</pre>"
+              else
+                buf = buf .. "<br><em>Unsupported command</em>"
+              end
             end
-            buf = buf .. "<br>https://github.com/StryKaizer/NodeMCU-Somfy"
+
+            buf = buf .. "<hr><br>https://github.com/StryKaizer/NodeMCU-Somfy"
         end
         buf = buf .. "</pre></body></html>"
         client:send(buf);
