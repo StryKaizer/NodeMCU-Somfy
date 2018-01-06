@@ -39,7 +39,7 @@ function readconfig()
 end
 
 function writeconfighard()
-    print("Saving config")
+    print("Saving config now!")
     file.remove(config_file .. "bak")
     file.rename(config_file .. "cfg", config_file .. "bak")
     file.open(config_file .. "cfg", "w+")
@@ -55,6 +55,7 @@ function writeconfighard()
 end
 
 function writeconfig()
+    print("Requested save config...")
     tmr.stop(tmr_cache)
     local savenow = false
     local savelater = false
@@ -73,11 +74,11 @@ function writeconfig()
     end
     savelater = savelater and not savenow
     if savenow then
-        print("Saving config now!")
+        print("Saving config immediately!")
         writeconfighard()
     end
     if savelater then
-        print("Saving config later")
+        print("Delay triggered to save config")
         tmr.alarm(tmr_cache, 65000, tmr.ALARM_SINGLE, writeconfighard)
     end
 end
