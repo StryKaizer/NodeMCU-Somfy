@@ -1,5 +1,7 @@
 # NodeMCU Somfy controller
 
+Control your SOMFY blinds with http commands, using a cheap NodeMCU microcontroller and an RF transmitter. 
+
 ## firmware
 
 Firmware requires the following 9 modules: cjson file gpio net node somfy tmr uart wifi.

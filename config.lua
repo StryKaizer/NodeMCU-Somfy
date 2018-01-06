@@ -32,14 +32,18 @@ function readconfig()
             file.close()
         end
     end
-    if not ln then ln = "{}" end
+    if not ln then
+      ln = '{"demo":{"rc":1,"address":"123456"}}' 
+      print("When no devices are configured, the demo device will be shown.")
+      print("You need to add your own device(s) before you can remove the demo item.")
+    end
     print("Configuration: " .. ln)
     config = cjson.decode(ln)
     config_saved = deepcopy(config)
 end
 
 function writeconfighard()
-    print("Saving config now!")
+    print("Saving config to flash memory. Server will be offline for a few seconds!")
     file.remove(config_file .. "bak")
     file.rename(config_file .. "cfg", config_file .. "bak")
     file.open(config_file .. "cfg", "w+")
@@ -47,7 +51,7 @@ function writeconfighard()
     if ok then
         file.writeline(cfg)
     else
-        print("Config not saved!")
+        print("Saving to flash memory failed.")
     end
     file.close()
 
@@ -83,10 +87,4 @@ function writeconfig()
     end
 end
 
-
-
 if not config then readconfig() end
-if config == 0 then -- somfy.cfg does not exist
-    config = cjson.decode([[{"dummyitem1":{"rc":1,"address":123},"dummyitem2":{"rc":1,"address":124}}]])
-    config_saved = deepcopy(config)
-end
