@@ -2,17 +2,18 @@
 
 Control your SOMFY blinds with http commands, using a cheap NodeMCU microcontroller and an RF transmitter. 
 
-## firmware
+## Firmware
 
 Firmware requires the following 9 modules: cjson file gpio net node somfy tmr uart wifi.
+You can find a precompiled firmware in the /firmware folder or build your own.
 
-    esptool.py --port /dev/tty.wchusbserial1410 write_flash -fm qio 0x00000 path/to/firmware/nodemcu-master-9-modules-2017-02-01-21-28-47-integer.bin
-
-# setup
+# Setup
 
 Copy default.settings.lua to settings.lua and adjust variables inside.
 
 ## Usage
+
+To pair a somfy shutter with the nodemcu, use an already paired somfy remote and hold program for 2-3 seconds until the shutters move up and down. Then fire a "PROGRAM" command from the somfy.  You can now start controlling your somfy shutter using http commands to your nodemcu.
 
 Add new device by sending ADD command.
 
@@ -26,9 +27,14 @@ Remove existing device
 
     http://<ip>/?name=yourfirstdevice&command=REMOVE
 
-Send somfy commands to existing device.
+Send commands to existing somfy device.
 
     http://<ip>/?name=window1&command=UP
     http://<ip>/?name=window1&command=DOWN
     http://<ip>/?name=window1&command=STOP
     http://<ip>/?name=window1&command=PROGRAM
+    
+
+## Tip for homekit users
+
+You can use this setup together with a homebridge server and the homebridge-blinds plugin to control your SOMFY devices with homekit and siri.
