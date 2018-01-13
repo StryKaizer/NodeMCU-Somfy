@@ -2,12 +2,10 @@
 
 Control your SOMFY blinds with http commands, using a cheap NodeMCU microcontroller and an RF transmitter. 
 
-## Firmware
+## Setup
 
 Firmware requires the following 9 modules: cjson file gpio net node somfy tmr uart wifi.
 You can find a precompiled firmware in the /firmware folder or build your own.
-
-# Setup
 
 Copy default.settings.lua to settings.lua and adjust variables inside. Upload all code to NodeMcu.
 
@@ -39,6 +37,6 @@ Send commands to existing Somfy device.
     http://<ip>/?name=window1&command=PROGRAM
     
 
-## Tip for homekit users
+## Tip for Homekit users
 
-You can use this setup together with a homebridge server and the homebridge-blinds plugin to control your SOMFY devices with homekit and siri.
+You can use this setup together with a homebridge server and the homebridge-blinds plugin to control your Somfy devices with Homekit and siri.
