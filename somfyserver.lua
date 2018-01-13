@@ -1,3 +1,16 @@
+-- INIT DELAY TIMER
+-- This timer delays commands when firing multiple requests simultaneously.
+delay_count = 1;
+delay_timer = tmr.create()
+delay_timer:register(500, tmr.ALARM_AUTO, function() 
+  if(delay_count > 1) then
+    delay_count = delay_count - 500;
+    if(delay_count < 2) then
+      delay_count = 1;
+    end
+  end
+end)
+delay_timer:start()
 -- START LISTENING FOR COMMANDS
 -- Example code: https://github.com/nodemcu/nodemcu-firmware/blob/dev/lua_examples/somfy.lua
 srv = net.createServer(net.TCP)
@@ -43,7 +56,12 @@ srv:listen(80, function(conn)
                 -- http://<ip>/?name=window1&command=UP
                 local remote_address = config[_GET.name].address
                 local rolling_code = config[_GET.name].rc
-                somfy.sendcommand(pin, remote_address, somfy.UP, rolling_code, repeat_count)
+                delay_tmr = tmr.create()
+                delay_tmr:register(delay_count, tmr.ALARM_SINGLE, function() 
+                    somfy.sendcommand(pin, remote_address, somfy.UP, rolling_code, repeat_count)
+                end)
+                delay_tmr:start()
+                delay_count = delay_count + 1000;
                 -- Increase rolling code with 1
                 config[_GET.name].rc = config[_GET.name].rc + 1
                 writeconfig()
@@ -52,7 +70,12 @@ srv:listen(80, function(conn)
                 -- http://<ip>/?name=window1&command=DOWN
                 local remote_address = config[_GET.name].address
                 local rolling_code = config[_GET.name].rc
-                somfy.sendcommand(pin, remote_address, somfy.DOWN, rolling_code, repeat_count)
+                delay_tmr = tmr.create()
+                delay_tmr:register(delay_count, tmr.ALARM_SINGLE, function()
+                    somfy.sendcommand(pin, remote_address, somfy.DOWN, rolling_code, repeat_count)
+                end)
+                delay_tmr:start()
+                delay_count = delay_count + 1000;
                 -- Increase rolling code with 1
                 config[_GET.name].rc = config[_GET.name].rc + 1
                 writeconfig()
@@ -61,7 +84,12 @@ srv:listen(80, function(conn)
                 -- http://<ip>/?name=window1&command=DOWN
                 local remote_address = config[_GET.name].address
                 local rolling_code = config[_GET.name].rc
-                somfy.sendcommand(pin, remote_address, somfy.STOP, rolling_code, repeat_count)
+                delay_tmr = tmr.create()
+                delay_tmr:register(delay_count, tmr.ALARM_SINGLE, function()
+                    somfy.sendcommand(pin, remote_address, somfy.STOP, rolling_code, repeat_count)
+                end)
+                delay_tmr:start()
+                delay_count = delay_count + 1000;
                 -- Increase rolling code with 1
                 config[_GET.name].rc = config[_GET.name].rc + 1
                 writeconfig()
