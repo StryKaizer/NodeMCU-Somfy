@@ -27,10 +27,14 @@ srv:listen(80, function(conn)
                 _GET[k] = v
             end
         end
-        body = body .. "<!DOCTYPE html><html><head></head><body><strong>NodeMCU Somfy controller</strong> - uptime " .. tmr.time() .. " sec<hr>";
-        body = body .. "<br><em>config.cfg</em><br><pre>" .. cjson.encode(config) .. "</pre>"
-        body = body .. "<br><em>repeat count:</em><br><pre>" .. repeat_count .. "</pre>"
-        body = body .. "<br><em>pin:</em><br><pre>" .. pin .. "</pre>"
+
+        if (not _GET.devicelist) then
+            body = body .. "<!DOCTYPE html><html><head></head><body><strong>NodeMCU Somfy controller</strong> - uptime " .. tmr.time() .. " sec<hr>";
+            body = body .. "<br><em>config.cfg</em><br><pre>" .. cjson.encode(config) .. "</pre>"
+            body = body .. "<br><em>repeat count:</em><br><pre>" .. repeat_count .. "</pre>"
+            body = body .. "<br><em>pin:</em><br><pre>" .. pin .. "</pre>"
+        end
+
         local _on, _off = "", ""
         if (_GET.name and _GET.command) then
             if (string.upper(_GET.command) == "ADD") then
@@ -103,8 +107,23 @@ srv:listen(80, function(conn)
               end
             end
         end
-        body = body .. "<br><hr>https://github.com/StryKaizer/NodeMCU-Somfy"
-        body = body .. "</body></html>"
+        if (_GET.devicelist) then
+            for devicename, values in pairs(config) do
+                body = body .. devicename .. " "
+                body = body .. "<a href='/?name=" .. devicename .. "&command=UP'>UP</a> "
+                body = body .. "<a href='/?name=" .. devicename .. "&command=DOWN'>DOWN</a> "
+                body = body .. "<a href='/?name=" .. devicename .. "&command=STOP'>STOP</a> "
+                body = body .. "<a href='/?name=" .. devicename .. "&command=PROGRAM'>PROG</a> "
+                body = body .. "<a href='/?name=" .. devicename .. "&command=REMOVE'>DEL</a> "
+                body = body .. "<br>"
+            end
+        end
+        if (not _GET.devicelist) then
+            body = body .. "<br><a href='/?devicelist=true'>Manage existing devices</a>"
+            body = body .. "<h2>Add device</h2><form action='/' method='get'>Device name: <input type='text' name='name'><br>Address: <input type='text' name='address'><br><input name='command' type='hidden' value='ADD'><input type='submit' value='Add device'></form>"
+            body = body .. "<br><hr>https://github.com/StryKaizer/NodeMCU-Somfy"
+            body = body .. "</body></html>"
+        end
         client:send(table.concat ({"HTTP/1.1 200 OK", "Content-Type: text/html", "Content-length: " .. #body, "", body}, "\r\n"));
         client:close();
         collectgarbage();
