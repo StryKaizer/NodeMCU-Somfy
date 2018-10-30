@@ -13,6 +13,17 @@ Copy default.settings.lua to settings.lua and adjust variables inside. Upload al
 
 ### Managing devices on NodeMCU
 
+#### The easy way
+
+You can add and manage your devices in the basic webinterface by browsing to
+
+    http://<ip>
+    
+Do note that managing existing devices in the webinterface is limited to +- 4 devices,
+as NodeMCU does not support big web output. If you have more than 4 devices, 
+you will need to manage them by using the links below, see "The advanced way".  
+
+#### The advanced way
 Add new device to NodeMCU by sending ADD command.
 
     http://<ip>/?name=window1&command=ADD&address=123456
