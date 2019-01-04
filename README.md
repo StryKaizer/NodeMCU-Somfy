@@ -51,3 +51,19 @@ Send commands to existing Somfy device.
 ## Tip for Homekit users
 
 You can use this setup together with a homebridge server and the homebridge-blinds plugin to control your Somfy devices with Homekit and siri.
+
+## Integration with Home Assistant
+
+Add following to your "configuration.yaml" in Home Assistant.
+
+    cover:
+      - platform: command_line
+        covers:
+          window1:
+            command_open: curl -X GET "http://192.168.1.150/?name=window1&command=UP"
+            command_close: curl -X GET "http://192.168.1.150/?name=window1&command=DOWN"
+            command_stop: curl -X GET "http://192.168.1.150/?name=window1&command=STOP"
+          window2:
+            command_open: curl -X GET "http://192.168.1.150/?name=window2&command=UP"
+            command_close: curl -X GET "http://192.168.1.150/?name=window2&command=DOWN"
+            command_stop: curl -X GET "http://192.168.1.150/?name=window2&command=STOP
