@@ -9,5 +9,6 @@ netmask = "255.255.255.0"
 -- Pin connected to RF data.
 pin = 1
 
--- How many times a command is repeated. 5 is a good default here.
+-- How many times a command is repeated. 5 is a good default here. 
+-- If you are experiencing blinds not going entirely up/down, try to lower this value (e.g. 2)
 repeat_count = 5
